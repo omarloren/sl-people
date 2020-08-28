@@ -1,0 +1,6 @@
+{
+    "server": {
+        "port":  8080
+    },
+    "sl_api_key": "xxxxx"
+}
