@@ -15,7 +15,6 @@ const webpack = require('webpack');
 const webpackConfig = require('./webpack.config');
 const compiler = webpack(webpackConfig);
 
-
 require('console-stamp')(console, 'HH:MM:ss.l');
 
 const app = express();
@@ -70,9 +69,17 @@ app.get('/api/*', function(req, res) {
     );
 });
 
-if (require.main === module) {
-    const server = http.createServer(app);
-    server.listen(config.get('server.port') || 8080, function() {
-        console.log('Listening on %j', server.address());
-    });
-}
+const server = http.createServer(app);
+
+server.listen(config.get('server.port') || 8080, function() {
+    
+    if (!config.has('sl_api_key')) {
+        console.error(`sl_api_key ::: not found in configuration file`)
+    }
+
+    if (!config.has('sl_api_url')) {
+        console.error(`sl_api_url ::: not found in configuration file`) 
+    }
+
+    console.log('Listening on %j', server.address());
+});
