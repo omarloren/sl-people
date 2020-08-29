@@ -8,12 +8,14 @@
 
 const http    = require('http');
 const express = require('express');
-const request = require('request');
 const config  = require('config');
 const webpack = require('webpack');
 
-const webpackConfig = require('./webpack.config');
+const webpackConfig = require('../webpack.config');
+const { ppid } = require('process');
 const compiler = webpack(webpackConfig);
+
+const People = require('./lib/People').People;
 
 require('console-stamp')(console, 'HH:MM:ss.l');
 
@@ -27,7 +29,7 @@ app.use(require('morgan')('short'));
 
 (function() {
     const webpack = require('webpack');
-    const webpackConfig = require('./webpack.config');
+    const webpackConfig = require('../webpack.config');
     const compiler = webpack(webpackConfig);
 
     app.use(
@@ -50,29 +52,32 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/api/*', function(req, res) {
-    const targetUrl = req.originalUrl.replace('api', '')
-
-    request(
-        {
-            'url': `${config.get('sl_api_url')}${targetUrl}`,
-            'headers': {
-                'Authorization': `Bearer ${config.get('sl_api_key')}`
-            }
-        },
-        function(err, response, body) {
-            if (err) {
-                return res.send(error);
-            }
-            res.send(body);
-        }
-    );
+app.get('/api/people', async (req, res) => {
+    const people = new People();
+    try {
+        await people.fetch();
+        res.send(people.data);
+    } catch(e) {
+        console.error(e)
+        res.send(500, 'Error while fetching people data')
+    }
 });
+
+app.get('/api/people/frequency', async(req, res) => {
+    const people = new People();
+    try {
+        await people.frequency();
+        res.send(people.data)
+    } catch(e) {
+        console.error(e)
+        res.send(500, 'Error while fetching people frequency data') 
+    }
+})
 
 const server = http.createServer(app);
 
 server.listen(config.get('server.port') || 8080, function() {
-    
+
     if (!config.has('sl_api_key')) {
         console.error(`sl_api_key ::: not found in configuration file`)
     }

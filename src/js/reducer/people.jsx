@@ -20,9 +20,9 @@ export default function(state = InitialState, action) {
         case GET_ALL_RECEIVE:
             return update(state, {
                 loading: { $set: true },
-                data: { $set: action.payload.data }
+                data: { $set: action.payload }
             })
     }
-    console.log(action) 
+ 
     return state
 }
