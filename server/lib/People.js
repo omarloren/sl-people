@@ -33,27 +33,6 @@ class People {
         this._data = data;
     }
 
-    frequency() {
-        const frequency = {}
-        
-        this._data.map((person) => {
-            const { email_address: email } = person;
-
-            for (let i in email) {
-                const c = email[i];
-                const charCount = frequency[c];
-
-                if (charCount) {
-                    frequency[c] = charCount + 1;
-                } else { 
-                    frequency[c] = 1;
-                }
-            }
-        });
-
-        return frequency;
-    }
-
     oneEditReplace(str1, str2) {
         let differenceFound = false;
         for (var i in str1) {
@@ -115,6 +94,29 @@ class People {
         }
         return duplicates;
     }
+
+
+    charFrequencies() {
+        const frequency = {}
+        
+        this._data.map((person) => {
+            const { email_address: email } = person;
+
+            for (let i in email) {
+                const c = email[i];
+                const charCount = frequency[c];
+
+                if (charCount) {
+                    frequency[c] = charCount + 1;
+                } else { 
+                    frequency[c] = 1;
+                }
+            }
+        });
+
+        return frequency;
+    }
+    
 }
 
 module.exports.People = People

@@ -1,30 +1,35 @@
-import React, { useEffect }from 'react';
+import React, { useEffect, useState }from 'react';
 import css from 'css/Page';
 import moment from 'moment'
 import { connect, useDispatch } from 'react-redux';
 
 import { Table, Button } from 'semantic-ui-react'
 import { getAll } from 'actions/people'
+import Frequency from 'containers/components/frequency';
+import frequency from './components/frequency';
+
 
 function People(props) {
     const { data } = props;
     const dispatch = useDispatch();
     
+    const [showFrequency, setShowFrequency] = useState(false)
     useEffect(() => {
         if (data === null ) {
             dispatch(getAll())
         }
     }, [data])
 
+
     if (data === null) {
         return null;
     }
 
     return (
-        <div class={css.container}>
+        <div className={css.container}>
             <h3>People</h3>
-            <div class={css.actions}>
-                <Button size='tiny' primary>Show Frequency</Button>
+            <div className={css.actions}>
+                <Button size='tiny' primary onClick={() => setShowFrequency(true)}>Show Frequency</Button>
                 <Button size='tiny' primary>Show Duplicates</Button>
             </div>
 
@@ -48,6 +53,7 @@ function People(props) {
                 }
                 </Table.Body>
             </Table>
+            <Frequency open={showFrequency} onClose={() => setShowFrequency(false)} />
         </div>
     )
 }

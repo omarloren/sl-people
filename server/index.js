@@ -63,11 +63,22 @@ app.get('/api/people', async (req, res) => {
     }
 });
 
-app.get('/api/people/frequency', async(req, res) => {
+app.get('/api/people/char_frequency', async(req, res) => {
     const people = new People();
     try {
-        await people.frequency();
-        res.send(people.data)
+        await people.fetch();
+        res.send(people.charFrequencies())
+    } catch(e) {
+        console.error(e)
+        res.send(500, 'Error while fetching people frequency data') 
+    }
+})
+
+app.get('/api/people/email_duplicates', async(req, res) => {
+    const people = new People();
+    try {
+        await people.fetch();
+        res.send(people.emailDuplicates())
     } catch(e) {
         console.error(e)
         res.send(500, 'Error while fetching people frequency data') 
