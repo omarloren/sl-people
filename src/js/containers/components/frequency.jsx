@@ -10,7 +10,7 @@ let frequenciesTable = (frequencies) => {
     let rows = []
     for (let char in frequencies) {
         rows.push(
-            <Table.Row>
+            <Table.Row key={char}>
                 <Table.Cell>{char}</Table.Cell>
                 <Table.Cell>{frequencies[char]}</Table.Cell>
             </Table.Row>

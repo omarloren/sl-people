@@ -2,11 +2,12 @@ import React, { useEffect, useState }from 'react';
 import css from 'css/Page';
 import moment from 'moment'
 import { connect, useDispatch } from 'react-redux';
+import { Table, Button } from 'semantic-ui-react';
 
-import { Table, Button } from 'semantic-ui-react'
-import { getAll } from 'actions/people'
+import { getAll } from 'actions/people';
+
 import Frequency from 'containers/components/frequency';
-import frequency from './components/frequency';
+import Duplicates from 'containers/components/duplicates';
 
 
 function People(props) {
@@ -14,6 +15,8 @@ function People(props) {
     const dispatch = useDispatch();
     
     const [showFrequency, setShowFrequency] = useState(false)
+    const [showDuplicates, setShowDuplicates] = useState(false)
+
     useEffect(() => {
         if (data === null ) {
             dispatch(getAll())
@@ -29,8 +32,8 @@ function People(props) {
         <div className={css.container}>
             <h3>People</h3>
             <div className={css.actions}>
-                <Button size='tiny' primary onClick={() => setShowFrequency(true)}>Show Frequency</Button>
-                <Button size='tiny' primary>Show Duplicates</Button>
+                <Button size='tiny' primary onClick={() => setShowFrequency(true)}>Char Frequency</Button>
+                <Button size='tiny' primary onClick={() => setShowDuplicates(true)}>Email Duplicates</Button>
             </div>
 
             <Table celled striped>
@@ -44,7 +47,7 @@ function People(props) {
                 <Table.Body>
                 {
                     data.map((person) => (
-                        <Table.Row>
+                        <Table.Row key={person.id}>
                             <Table.Cell>{person.display_name}</Table.Cell>
                             <Table.Cell>{person.email_address}</Table.Cell>
                             <Table.Cell>{person.title}</Table.Cell>
@@ -53,7 +56,8 @@ function People(props) {
                 }
                 </Table.Body>
             </Table>
-            <Frequency open={showFrequency} onClose={() => setShowFrequency(false)} />
+            <Frequency open={showFrequency} onClose={() => setShowFrequency(false) } />
+            <Duplicates open={showDuplicates} onClose={() => setShowDuplicates(false) } />
         </div>
     )
 }
